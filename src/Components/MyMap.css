@@ -1,38 +1,88 @@
-/* Wrapper to Center Everything */
+/* General Page Styling */
 .map-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh; /* Full viewport height */
-  }
-  
-  /* Centered Map Container */
-  .map-container {
-    height: 500px;
-    width: 80%;
-    max-width: 900px;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(8px);
-    background: rgba(255, 255, 255, 0.1);
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .map-container:hover {
-    transform: scale(1.02);
-  }
-  
-  /* Title Styling */
-  .map-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #4CAF50;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #f5f5f5;
+  font-family: Arial, sans-serif;
+}
+
+/* Title Styling */
+.map-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Controls Container */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Input Fields */
+.controls input {
+  width: 220px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.controls input:focus {
+  border-color: #4285f4;
+}
+
+/* Buttons */
+.search-btn, .swap-btn {
+  background: #4285f4;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.search-btn:hover, .swap-btn:hover {
+  background: #357ae8;
+}
+
+.swap-btn {
+  background: #fbbc05;
+  font-size: 18px;
+  padding: 8px 12px;
+}
+
+.swap-btn:hover {
+  background: #e6a700;
+}
+
+/* Map Container */
+.map-container {
+  width: 80%;
+  height: 500px;
+  margin-top: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Distance Text */
+.distance-text {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 15px;
+  color: #333;
+}
