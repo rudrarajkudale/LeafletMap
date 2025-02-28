@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Polyline, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import axios from "axios";
 import "./MyMap.css";
 
-// Default marker
 const defaultIcon = L.icon({
   iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
   shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
@@ -27,6 +26,7 @@ const MyMap = () => {
   const [to, setTo] = useState("");
   const [fromCoords, setFromCoords] = useState(null);
   const [toCoords, setToCoords] = useState(null);
+  const [routeCoords, setRouteCoords] = useState([]);
   const [loading, setLoading] = useState(false);
   const [distance, setDistance] = useState(null);
 
@@ -51,10 +51,22 @@ const MyMap = () => {
     try {
       const response = await axios.get(url);
       if (response.data.routes.length > 0) {
-        return (response.data.routes[0].distance / 1000).toFixed(2); // Convert meters to km
+        return (response.data.routes[0].distance / 1000).toFixed(2);
       }
     } catch {
       return null;
+    }
+  };
+
+  const getRoute = async (fromCoords, toCoords) => {
+    const url = `https://router.project-osrm.org/route/v1/driving/${fromCoords.lon},${fromCoords.lat};${toCoords.lon},${toCoords.lat}?overview=full&geometries=geojson`;
+    try {
+      const response = await axios.get(url);
+      if (response.data.routes.length > 0) {
+        return response.data.routes[0].geometry.coordinates.map(([lon, lat]) => [lat, lon]);
+      }
+    } catch {
+      return [];
     }
   };
 
@@ -74,6 +86,8 @@ const MyMap = () => {
     setToCoords(toLocation);
     const calculatedDistance = await getDistance(fromLocation, toLocation);
     setDistance(calculatedDistance);
+    const route = await getRoute(fromLocation, toLocation);
+    setRouteCoords(route);
     setLoading(false);
   };
 
@@ -89,7 +103,7 @@ const MyMap = () => {
       {loading && <p>Loading map...</p>}
       {fromCoords && toCoords && (
         <>
-          <MapContainer center={[fromCoords.lat, fromCoords.lon]} zoom={10} className="map-container">
+          <MapContainer center={[fromCoords.lat, fromCoords.lon]} zoom={10} className="map-container" zoomControl={false}>
             <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; OpenStreetMap contributors' />
             <Marker position={[fromCoords.lat, fromCoords.lon]} icon={defaultIcon}>
               <Popup>📍 {from}</Popup>
@@ -97,6 +111,7 @@ const MyMap = () => {
             <Marker position={[toCoords.lat, toCoords.lon]} icon={defaultIcon}>
               <Popup>📍 {to}</Popup>
             </Marker>
+            {routeCoords.length > 0 && <Polyline positions={routeCoords} color="blue" />}
           </MapContainer>
           <p className="distance-text">Distance: {distance ? `${distance} km` : "Calculating..."}</p>
         </>
